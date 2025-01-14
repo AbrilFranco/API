@@ -1,0 +1,70 @@
+/* styles.css */
+body {
+    font-family: 'Georgia', serif; /* Fuente clásica y elegante */
+    margin: 0;
+    padding: 0;
+    background-color: #fdf6e3; /* Fondo crema cálido */
+    color: #6d4c41; /* Marrón suave */
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    text-align: center;
+    padding: 20px;
+    border: 2px solid #8d6e63; /* Borde marrón más oscuro */
+    border-radius: 12px;
+    background-color: #ffffff; /* Fondo blanco para el contenido */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+h1 {
+    color: #5d4037; /* Marrón oscuro */
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: #ffccbc; /* Naranja suave */
+    margin: 12px 0;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #bcaaa4; /* Borde marrón claro */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+li:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+a {
+    text-decoration: none;
+    color: #3e2723; /* Marrón muy oscuro */
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #bf360c; /* Naranja quemado */
+    text-decoration: underline;
+}
+
+.actions a.execute {
+    color: #e64a19; /* Naranja intenso */
+}
+
+.actions a.execute:hover {
+    color: #d84315; /* Naranja más oscuro */
+}
+
