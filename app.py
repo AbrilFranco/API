@@ -1,62 +1,106 @@
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
+from queue import Queue
 
-from flask import Flask, render_template, redirect, url_for, abort
-import os
-from nbconvert import HTMLExporter
-import nbformat
-import papermill as pm
 
 app = Flask(__name__)
+CORS(app)
 
-# Carpetas de trabajo
-BASE_DIR = os.path.dirname(__file__)
-NOTEBOOK_DIR = os.path.join(BASE_DIR, 'notebooks')
-EXECUTED_DIR = os.path.join(NOTEBOOK_DIR, 'executed')
-DATASET_DIR = os.path.join(BASE_DIR, 'datasets')
-
-# Asegurar que la carpeta 'executed' exista
-os.makedirs(EXECUTED_DIR, exist_ok=True)
-
+# Ruta para cargar el archivo index.html
 @app.route('/')
 def index():
-    """Página principal que lista los notebooks."""
-    notebooks = [f for f in os.listdir(NOTEBOOK_DIR) if f.endswith('.ipynb') and not f.startswith('executed')]
-    return render_template('index.html', notebooks=notebooks)
+    return render_template('index.html')
 
-@app.route('/execute/<filename>')
-def execute_notebook(filename):
-    """Ejecuta un notebook usando papermill."""
-    notebook_path = os.path.join(NOTEBOOK_DIR, filename)
-    executed_path = os.path.join(EXECUTED_DIR, f"{os.path.splitext(filename)[0]}_executed.ipynb")
+# BFS normal
+def bfs(estado_inicial, estado_final):
+    queue = Queue()
+    queue.put([estado_inicial])
+    visited = set()
 
-    if not os.path.exists(notebook_path):
-        abort(404)
+    while not queue.empty():
+        path = queue.get()
+        state = path[-1]
 
-    try:
-        # Ejecutar el notebook con papermill
-        pm.execute_notebook(
-            notebook_path,
-            executed_path,
-            parameters={"DATASET_DIR": DATASET_DIR}  # Pasar la ruta del dataset como parámetro
-        )
-    except Exception as e:
-        return f"Error al ejecutar el notebook: {e}", 500
+        if state == estado_final:
+            return path
 
-    return redirect(url_for('view_notebook', filename=f"executed/{os.path.basename(executed_path)}"))
+        if tuple(state) not in visited:
+            visited.add(tuple(state))
 
-@app.route('/notebook/<path:filename>')
-def view_notebook(filename):
-    """Muestra un notebook convertido a HTML."""
-    notebook_path = os.path.join(NOTEBOOK_DIR, filename)
-    if not os.path.exists(notebook_path):
-        abort(404)
+            for i in range(len(state) - 1):
+                new_state = state[:]
+                new_state[i], new_state[i + 1] = new_state[i + 1], new_state[i]
+                queue.put(path + [new_state])
 
-    html_exporter = HTMLExporter()
-    html_exporter.template_name = 'lab'
-    with open(notebook_path, 'r', encoding='utf-8') as f:
-        notebook_node = nbformat.read(f, as_version=4)
-        (body, _) = html_exporter.from_notebook_node(notebook_node)
+    return None
 
-    return render_template('notebook.html', notebook_html=body)
+# BFS recursivo
+def bfs_recursivo(queue, estado_final, visited):
+    if queue.empty():
+        return None
+    
+    path = queue.get()
+    state = path[-1]
+
+    if state == estado_final:
+        return path
+
+    if tuple(state) not in visited:
+        visited.add(tuple(state))
+
+        for i in range(len(state) - 1):
+            new_state = state[:]
+            new_state[i], new_state[i + 1] = new_state[i + 1], new_state[i]
+            queue.put(path + [new_state])
+
+    return bfs_recursivo(queue, estado_final, visited)
+
+def resolver_bfs_recursivo(estado_inicial, estado_final):
+    queue = Queue()
+    queue.put([estado_inicial])
+    visited = set()
+    return bfs_recursivo(queue, estado_final, visited)
+
+# DFS
+def dfs(estado_inicial, estado_final, path=None, visited=None):
+    if path is None:
+        path = [estado_inicial]
+    if visited is None:
+        visited = set()
+
+    state = path[-1]
+    if state == estado_final:
+        return path
+
+    visited.add(tuple(state))
+
+    for i in range(len(state) - 1):
+        new_state = state[:]
+        new_state[i], new_state[i + 1] = new_state[i + 1], new_state[i]
+
+        if tuple(new_state) not in visited:
+            new_path = dfs(estado_inicial, estado_final, path + [new_state], visited)
+            if new_path:
+                return new_path
+
+    return None
+
+@app.route('/resolver_puzzle', methods=['POST'])
+def resolver_puzzle():
+    data = request.get_json()
+    estado_inicial = list(map(int, data.get("estado_inicial", [])))
+    estado_final = list(map(int, data.get("estado_final", [])))
+
+    resultado = {
+        "bfs": bfs(estado_inicial, estado_final),
+        "bfs_recursivo": resolver_bfs_recursivo(estado_inicial, estado_final),
+        "dfs": dfs(estado_inicial, estado_final)
+    }
+    return jsonify(resultado)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+

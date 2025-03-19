@@ -1,70 +1,77 @@
-/* styles.css */
 body {
-    font-family: 'Georgia', serif; /* Fuente clásica y elegante */
-    margin: 0;
-    padding: 0;
-    background-color: #fdf6e3; /* Fondo crema cálido */
-    color: #6d4c41; /* Marrón suave */
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    padding: 50px;
 }
 
 .container {
-    max-width: 800px;
-    margin: 50px auto;
-    text-align: center;
+    background: white;
     padding: 20px;
-    border: 2px solid #8d6e63; /* Borde marrón más oscuro */
-    border-radius: 12px;
-    background-color: #ffffff; /* Fondo blanco para el contenido */
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #5d4037; /* Marrón oscuro */
+    font-size: 24px;
+    color: #333;
     margin-bottom: 20px;
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
-    background: #ffccbc; /* Naranja suave */
-    margin: 12px 0;
-    padding: 15px;
-    border-radius: 10px;
-    border: 2px solid #bcaaa4; /* Borde marrón claro */
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+form {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    gap: 15px;
 }
 
-li:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-a {
-    text-decoration: none;
-    color: #3e2723; /* Marrón muy oscuro */
+label {
     font-weight: bold;
-    transition: color 0.3s ease;
+    text-align: left;
+    width: 100%;
+    max-width: 300px;
 }
 
-a:hover {
-    color: #bf360c; /* Naranja quemado */
-    text-decoration: underline;
+.input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
 }
 
-.actions a.execute {
-    color: #e64a19; /* Naranja intenso */
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    text-align: center;
 }
 
-.actions a.execute:hover {
-    color: #d84315; /* Naranja más oscuro */
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
 }
 
+button:hover {
+    background-color: #0056b3;
+}
+
+h2 {
+    margin-top: 20px;
+    color: #444;
+}
+
+p {
+    font-size: 16px;
+}

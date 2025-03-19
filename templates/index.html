@@ -1,26 +1,59 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notebooks Disponibles</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resolver Puzzle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
     <div class="container">
-        <h1>Lista de Notebooks</h1>
-        <ul>
-            {% for notebook in notebooks %}
-            <li>
-                <span>{{ notebook }}</span>
-                <div class="actions">
-                    <a href="{{ url_for('view_notebook', filename=notebook) }}">Ver</a>
-                    
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
+        <h1>Resolver rompecabezas lineal</h1>
+
+        <form id="formulario">
+            <div class="input-container">
+                <label for="estado_inicial">Estado Inicial:</label>
+                <input type="text" id="estado_inicial" name="estado_inicial" placeholder="Ej: 1,2,3,4" required />
+            </div>
+
+            <div class="input-container">
+                <label for="estado_final">Estado Final:</label>
+                <input type="text" id="estado_final" name="estado_final" placeholder="Ej: 4,3,2,1" required />
+            </div>
+
+            <button type="submit">Resolver</button>
+        </form>
+
+        <div id="resultados" class="resultados">
+            <h2>Resultados:</h2>
+            <p><strong>BFS:</strong> <span id="resultado-bfs">nulo</span></p>
+            <p><strong>BFS Recursivo:</strong> <span id="resultado-bfs-recursivo">nulo</span></p>
+            <p><strong>DFS:</strong> <span id="resultado-dfs">nulo</span></p>
+        </div>
     </div>
+
+    <script>
+        document.getElementById("formulario").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const estadoInicial = document.getElementById("estado_inicial").value.split(",").map(Number);
+            const estadoFinal = document.getElementById("estado_final").value.split(",").map(Number);
+
+            const respuesta = await fetch("/resolver_puzzle", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ estado_inicial: estadoInicial, estado_final: estadoFinal }),
+            });
+
+            const data = await respuesta.json();
+
+            document.getElementById("resultado-bfs").textContent = data.bfs ? JSON.stringify(data.bfs) : "nulo";
+            document.getElementById("resultado-bfs-recursivo").textContent = data.bfs_recursivo ? JSON.stringify(data.bfs_recursivo) : "nulo";
+            document.getElementById("resultado-dfs").textContent = data.dfs ? JSON.stringify(data.dfs) : "nulo";
+        });
+    </script>
 </body>
 </html>
+
+
+
